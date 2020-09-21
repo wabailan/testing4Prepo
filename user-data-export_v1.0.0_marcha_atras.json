@@ -1,0 +1,1654 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "This API allows to export User Data to requesting API Client, with the main use case of complying with GDPR article 15 that states 'People can ask for their data to be exported in a nice format'.\n\n# Relevant Definitions and concepts\n\n- **User Data**: Personal information the OB has about the user.\n- **User Friendly Field**:  Some string params in the API are described as User Friendly, meaning that information should be an string directly understandable by a human. Params marked this way may be used for display purposes.\n\n# API Functionality\n This API has the functionality of retrieving the User Data, either the information for the user or for a phone-number of the user.\n\n# Resources and Operations overview\n There is an endpoint that provides all the User Data (except location information for their phone-number). Second, there is an endpoint that provides the information regarding consumptions and location information for a given mobile phone-number of the user.\n\n# Further Info and Support\nFind answers to Frequently Asked Questions in **https://qna.baikalplatform.com/c/api-faq**.\n\nTopics with the **tag 'user-data-export'** are specific for User Data Expor API.",
+    "version": "1.0.0",
+    "title": "User Data Export",
+    "termsOfService": "https://www.telefonica.es/es/",
+    "contact": {
+      "name": "4th Platform Team",
+      "email": "4pf@tid.es"
+    }
+  },
+  "x-fp-apiPrefix": "/user-data-export",
+  "basePath": "/t3/cus/u360/v1",
+  "tags": [
+    {
+      "name": "data-export",
+      "description": "Operations to retrieve exported user data"
+    }
+  ],
+  "host": "common-oauthgw:8080",
+  "schemes": [
+    "http"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/users/{user_id}/data": {
+      "get": {
+        "tags": [
+          "data-export"
+        ],
+        "description": "This operation obtains all the data exported for a user: personal-info, contact-info, id-documents, address, bank-accounts, subscribed-products, fixed-consumption-information, mobile-consumption-information, video-consumption-information and additional-information. The consumption information is for the 6 last months.",
+        "summary": "Retrieve all the data exported for a user",
+        "operationId": "retrieveUserDataInfoSet",
+        "x-fp-pi-scopes": [
+          "user-data-export-user-read"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/parameters/UserId"
+          },
+          {
+            "$ref": "https://docs.baikalplatform.com/common/v2.3/common.json#/parameters/x-correlator"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {
+              "x-correlator": {
+                "type": "string",
+                "description": "Correlation id for the different services"
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/UserDataset"
+            },
+            "examples": {
+              "application/json": {
+                "identity": {
+                  "first_name": "Ignacio",
+                  "last_name": "Gomez Sanchez"
+                },
+                "contact_info": [
+                  {
+                    "type": "email",
+                    "value": "ignacio.gomez@myemail.com"
+                  },
+                  {
+                    "type": "phone_number",
+                    "value": "+346667778880"
+                  }
+                ],
+                "id_document": {
+                  "country": "ES",
+                  "type": "DNI",
+                  "value": "74637658X"
+                },
+                "addresses": [
+                  {
+                    "formatted": "Ronda de la Comunicacion, sn, Edificio Central\r\n28050 Madrid (Madrid)\r\nSpain",
+                    "street_address": "onda de la Comunicacion, sn, Edificio Central",
+                    "locality": "Madrid",
+                    "region": "Madrid",
+                    "postal_code": "28050",
+                    "country": "ES",
+                    "is_usual_address": true
+                  }
+                ],
+                "bank_accounts": [
+                  {
+                    "account_number": "ES6000491500051234567892",
+                    "account_number_type": "IBAN",
+                    "billing_account_name": "Cuenta 1"
+                  }
+                ],
+                "subscribed_products": [
+                  {
+                    "product_name": "Fusion Base X2 600MB",
+                    "product_description": "Fusion Base con fibra de 600MB, dos líneas móviles con 10GB y Televisión.",
+                    "product_type": "bundle",
+                    "subscription_type": "postpaid",
+                    "sub_products": [
+                      {
+                        "product_name": "Linea Fusion",
+                        "product_description": "Línea móvil Fusion con 10GB de datos",
+                        "product_type": "mobile",
+                        "subscription_type": "postpaid",
+                        "phone_number": "+346667778880"
+                      },
+                      {
+                        "product_name": "Linea Fusion",
+                        "product_description": "Línea móvil Fusion con 10GB de datos",
+                        "product_type": "mobile",
+                        "subscription_type": "postpaid",
+                        "phone_number": "+346667779990"
+                      },
+                      {
+                        "product_name": "Fijo Fusion",
+                        "product_description": "Línea de telefonía fija",
+                        "product_type": "landline",
+                        "subscription_type": "postpaid",
+                        "phone_number": "+349837778880"
+                      },
+                      {
+                        "product_name": "Fibra 600 MB",
+                        "product_description": "Conexión de fibra de 600MB simétricos",
+                        "product_type": "internet",
+                        "subscription_type": "postpaid"
+                      },
+                      {
+                        "product_name": "Television Base",
+                        "product_description": "Paquete básico de televisión, con más de 80 canales y 2000 títulos bajo demanda. Incluye últimos 7 días y grabaciones",
+                        "product_type": "iptv",
+                        "subscription_type": "postpaid"
+                      }
+                    ]
+                  },
+                  {
+                    "product_name": "Extra 3GB",
+                    "product_description": "Bono de datos extra de 3GB",
+                    "product_type": "bolt-on",
+                    "subscription_type": "postpaid",
+                    "phone_number": "+346667778880"
+                  }
+                ],
+                "fixed_consumption_information": [
+                  {
+                    "phone_number": "+349837778880",
+                    "voice_consumption": [
+                      {
+                        "start_date": "2019-11-18T00:00:00+0100",
+                        "end_date": "2019-12-17T23:59:59+0100",
+                        "total_calls": 33,
+                        "total_seconds": 2339
+                      },
+                      {
+                        "start_date": "2019-10-18T00:00:00+0100",
+                        "end_date": "2019-11-17T23:59:59+0100",
+                        "total_calls": 76,
+                        "total_seconds": 14310
+                      },
+                      {
+                        "start_date": "2019-09-18T00:00:00+0100",
+                        "end_date": "2019-10-17T23:59:59+0100",
+                        "total_calls": 270,
+                        "total_seconds": 20123
+                      },
+                      {
+                        "start_date": "2019-08-18T00:00:00+0100",
+                        "end_date": "2019-09-17T23:59:59+0100",
+                        "total_calls": 317,
+                        "total_seconds": 19728
+                      },
+                      {
+                        "start_date": "2019-07-18T00:00:00+0100",
+                        "end_date": "2019-08-17T23:59:59+0100",
+                        "total_calls": 313,
+                        "total_seconds": 26586
+                      },
+                      {
+                        "start_date": "2019-06-18T00:00:00+0100",
+                        "end_date": "2019-07-17T23:59:59+0100",
+                        "total_calls": 255,
+                        "total_seconds": 16548
+                      }
+                    ]
+                  }
+                ],
+                "mobile_consumption_information": [
+                  {
+                    "phone_number": "+346667778880",
+                    "voice_consumption": [
+                      {
+                        "start_date": "2019-11-18T00:00:00+0100",
+                        "end_date": "2019-12-17T23:59:59+0100",
+                        "total_calls": 33,
+                        "total_seconds": 2339
+                      },
+                      {
+                        "start_date": "2019-10-18T00:00:00+0100",
+                        "end_date": "2019-11-17T23:59:59+0100",
+                        "total_calls": 76,
+                        "total_seconds": 14310
+                      },
+                      {
+                        "start_date": "2019-09-18T00:00:00+0100",
+                        "end_date": "2019-10-17T23:59:59+0100",
+                        "total_calls": 270,
+                        "total_seconds": 20123
+                      },
+                      {
+                        "start_date": "2019-08-18T00:00:00+0100",
+                        "end_date": "2019-09-17T23:59:59+0100",
+                        "total_calls": 317,
+                        "total_seconds": 19728
+                      },
+                      {
+                        "start_date": "2019-07-18T00:00:00+0100",
+                        "end_date": "2019-08-17T23:59:59+0100",
+                        "total_calls": 313,
+                        "total_seconds": 26586
+                      },
+                      {
+                        "start_date": "2019-06-18T00:00:00+0100",
+                        "end_date": "2019-07-17T23:59:59+0100",
+                        "total_calls": 255,
+                        "total_seconds": 16548
+                      }
+                    ],
+                    "data_consumption": [
+                      {
+                        "start_date": "2019-11-18T00:00:00+0100",
+                        "end_date": "2019-12-17T23:59:59+0100",
+                        "total_megabytes": 402
+                      },
+                      {
+                        "start_date": "2019-10-18T00:00:00+0100",
+                        "end_date": "2019-11-17T23:59:59+0100",
+                        "total_megabytes": 238
+                      },
+                      {
+                        "start_date": "2019-09-18T00:00:00+0100",
+                        "end_date": "2019-10-17T23:59:59+0100",
+                        "total_megabytes": 1764
+                      },
+                      {
+                        "start_date": "2019-08-18T00:00:00+0100",
+                        "end_date": "2019-09-17T23:59:59+0100",
+                        "total_megabytes": 3020
+                      },
+                      {
+                        "start_date": "2019-07-18T00:00:00+0100",
+                        "end_date": "2019-08-17T23:59:59+0100",
+                        "total_megabytes": 3218
+                      },
+                      {
+                        "start_date": "2019-06-18T00:00:00+0100",
+                        "end_date": "2019-07-17T23:59:59+0100",
+                        "total_megabytes": 3121
+                      }
+                    ],
+                    "messages_consumption": [
+                      {
+                        "start_date": "2019-11-18T00:00:00+0100",
+                        "end_date": "2019-12-17T23:59:59+0100",
+                        "total_messages": 33
+                      },
+                      {
+                        "start_date": "2019-10-18T00:00:00+0100",
+                        "end_date": "2019-11-17T23:59:59+0100",
+                        "total_messages": 0
+                      },
+                      {
+                        "start_date": "2019-09-18T00:00:00+0100",
+                        "end_date": "2019-10-17T23:59:59+0100",
+                        "total_messages": 108
+                      },
+                      {
+                        "start_date": "2019-08-18T00:00:00+0100",
+                        "end_date": "2019-09-17T23:59:59+0100",
+                        "total_messages": 116
+                      },
+                      {
+                        "start_date": "2019-07-18T00:00:00+0100",
+                        "end_date": "2019-08-17T23:59:59+0100",
+                        "total_messages": 118
+                      },
+                      {
+                        "start_date": "2019-06-18T00:00:00+0100",
+                        "end_date": "2019-07-17T23:59:59+0100",
+                        "total_messages": 113
+                      }
+                    ]
+                  },
+                  {
+                    "phone_number": "+346667779990",
+                    "voice_consumption": [
+                      {
+                        "start_date": "2019-11-18T00:00:00+0100",
+                        "end_date": "2019-12-17T17:00:00+0100",
+                        "total_calls": 3,
+                        "total_seconds": 234
+                      },
+                      {
+                        "start_date": "2019-10-18T00:00:00+0100",
+                        "end_date": "2019-11-17T23:59:59+0100",
+                        "total_calls": 44,
+                        "total_seconds": 33340
+                      },
+                      {
+                        "start_date": "2019-09-18T00:00:00+0100",
+                        "end_date": "2019-10-17T23:59:59+0100",
+                        "total_calls": 120,
+                        "total_seconds": 12301
+                      },
+                      {
+                        "start_date": "2019-08-18T00:00:00+0100",
+                        "end_date": "2019-09-17T23:59:59+0100",
+                        "total_calls": 498,
+                        "total_seconds": 34897
+                      },
+                      {
+                        "start_date": "2019-07-18T00:00:00+0100",
+                        "end_date": "2019-08-17T23:59:59+0100",
+                        "total_calls": 223,
+                        "total_seconds": 22345
+                      },
+                      {
+                        "start_date": "2019-06-18T00:00:00+0100",
+                        "end_date": "2019-07-17T23:59:59+0100",
+                        "total_calls": 12,
+                        "total_seconds": 350
+                      }
+                    ],
+                    "data_consumption": [
+                      {
+                        "start_date": "2019-11-18T00:00:00+0100",
+                        "end_date": "2019-12-17T23:59:59+0100",
+                        "total_megabytes": 345
+                      },
+                      {
+                        "start_date": "2019-10-18T00:00:00+0100",
+                        "end_date": "2019-11-17T23:59:59+0100",
+                        "total_megabytes": 123
+                      },
+                      {
+                        "start_date": "2019-09-18T00:00:00+0100",
+                        "end_date": "2019-10-17T23:59:59+0100",
+                        "total_megabytes": 445
+                      },
+                      {
+                        "start_date": "2019-08-18T00:00:00+0100",
+                        "end_date": "2019-09-17T23:59:59+0100",
+                        "total_megabytes": 3444
+                      },
+                      {
+                        "start_date": "2019-07-18T00:00:00+0100",
+                        "end_date": "2019-08-17T23:59:59+0100",
+                        "total_megabytes": 1120
+                      },
+                      {
+                        "start_date": "2019-06-18T00:00:00+0100",
+                        "end_date": "2019-07-17T23:59:59+0100",
+                        "total_megabytes": 4321
+                      }
+                    ],
+                    "messages_consumption": [
+                      {
+                        "start_date": "2019-11-18T00:00:00+0100",
+                        "end_date": "2019-12-17T23:59:59+0100",
+                        "total_messages": 0
+                      },
+                      {
+                        "start_date": "2019-10-18T00:00:00+0100",
+                        "end_date": "2019-11-17T23:59:59+0100",
+                        "total_messages": 0
+                      },
+                      {
+                        "start_date": "2019-09-18T00:00:00+0100",
+                        "end_date": "2019-10-17T23:59:59+0100",
+                        "total_messages": 0
+                      },
+                      {
+                        "start_date": "2019-08-18T00:00:00+0100",
+                        "end_date": "2019-09-17T23:59:59+0100",
+                        "total_messages": 1
+                      },
+                      {
+                        "start_date": "2019-07-18T00:00:00+0100",
+                        "end_date": "2019-08-17T23:59:59+0100",
+                        "total_messages": 0
+                      },
+                      {
+                        "start_date": "2019-06-18T00:00:00+0100",
+                        "end_date": "2019-07-17T23:59:59+0100",
+                        "total_messages": 0
+                      }
+                    ]
+                  }
+                ],
+                "video_consumption_information": [
+                  {
+                    "phone_number": "+349837778880",
+                    "video_consumption": [
+                      {
+                        "start_date": "2019-11-18T00:00:00+0100",
+                        "end_date": "2019-12-17T23:59:59+0100",
+                        "total_contents": 1,
+                        "contents": [
+                          {
+                            "title": "Game of Thrones T8 Chapter 4",
+                            "view_date": "2019-11-28T13:00:00+0100"
+                          }
+                        ]
+                      },
+                      {
+                        "start_date": "2019-10-18T00:00:00+0100",
+                        "end_date": "2019-11-17T23:59:59+0100",
+                        "total_contents": 0
+                      },
+                      {
+                        "start_date": "2019-09-18T00:00:00+0100",
+                        "end_date": "2019-10-17T23:59:59+0100",
+                        "total_contents": 3,
+                        "contents": [
+                          {
+                            "title": "Game of Thrones T8 Chapter 1",
+                            "view_date": "2019-09-28T23:00:00+0100"
+                          },
+                          {
+                            "title": "Game of Thrones T8 Chapter 2",
+                            "view_date": "2019-09-29T00:30:00+0100"
+                          },
+                          {
+                            "title": "Game of Thrones T8 Chapter 2",
+                            "view_date": "2019-09-30T11:00:00+0100"
+                          }
+                        ]
+                      },
+                      {
+                        "start_date": "2019-08-18T00:00:00+0100",
+                        "end_date": "2019-09-17T23:59:59+0100",
+                        "total_contents": 2,
+                        "contents": [
+                          {
+                            "title": "Ladybug T3 Chapter 1",
+                            "view_date": "2019-09-14T11:00:00+0100"
+                          },
+                          {
+                            "title": "Ladybug T3 Chapter 2",
+                            "view_date": "2019-09-14T11:30:00+0100"
+                          }
+                        ]
+                      },
+                      {
+                        "start_date": "2019-07-18T00:00:00+0100",
+                        "end_date": "2019-08-17T23:59:59+0100",
+                        "total_contents": 4,
+                        "contents": [
+                          {
+                            "title": "Ladybug T3 Chapter 1",
+                            "view_date": "2019-08-09T11:00:00+0100"
+                          },
+                          {
+                            "title": "Ladybug T3 Chapter 2",
+                            "view_date": "2019-08-09T11:30:00+0100"
+                          },
+                          {
+                            "title": "Ladybug T3 Chapter 2",
+                            "view_date": "2019-08-09T12:30:00+0100"
+                          },
+                          {
+                            "title": "Ladybug T3 Chapter 3",
+                            "view_date": "2019-08-11T10:30:00+0100"
+                          }
+                        ]
+                      },
+                      {
+                        "start_date": "2019-06-18T00:00:00+0100",
+                        "end_date": "2019-07-17T23:59:59+0100",
+                        "total_contents": 1,
+                        "contents": [
+                          {
+                            "title": "Green Book",
+                            "view_date": "2019-06-23T22:00:00+0100"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+          },
+          "400": {
+            "description": "Problem with the client request",
+            "schema": {
+              "$ref": "https://docs.baikalplatform.com/errors/v2.0/errors.json#/definitions/InvalidArgument"
+            },
+            "examples": {
+              "application/json": {
+                "code": "INVALID_ARGUMENT",
+                "message": "Client specified an invalid argument, request body or query param"
+              }
+            }
+          },
+          "403": {
+            "description": "Client does not have sufficient permission",
+            "schema": {
+              "$ref": "https://docs.baikalplatform.com/errors/v2.0/errors.json#/definitions/PermissionDenied"
+            },
+            "examples": {
+              "application/json": {
+                "code": "PERMISSION_DENIED",
+                "message": "Authenticated user has no permission to access the requested resource"
+              }
+            }
+          },
+          "404": {
+            "description": "Resource Not Found",
+            "schema": {
+              "$ref": "https://docs.baikalplatform.com/errors/v2.0/errors.json#/definitions/NotFound"
+            },
+            "examples": {
+              "application/json": {
+                "code": "NOT_FOUND",
+                "message": "A specified resource is not found"
+              }
+            }
+          },
+          "500": {
+            "description": "Server error",
+            "schema": {
+              "$ref": "https://docs.baikalplatform.com/errors/v2.0/errors.json#/definitions/Internal"
+            },
+            "examples": {
+              "application/json": {
+                "code": "INTERNAL",
+                "message": "Server error"
+              }
+            }
+          },
+          "504": {
+            "description": "Request timeout exceeded. If it happens repeatedly, consider reducing the request complexity",
+            "schema": {
+              "$ref": "https://docs.baikalplatform.com/errors/v2.0/errors.json#/definitions/Timeout"
+            },
+            "examples": {
+              "application/json": {
+                "code": "TIMEOUT",
+                "message": "Request timeout exceeded. Try it later"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/{user_id}/phone-numbers/{phone_number}/data": {
+      "get": {
+        "tags": [
+          "data-export"
+        ],
+        "description": "This operation obtains all the data exported for a mobile phone-number of a user: mobile-consumption-information of last six months and location-information of last 30 days.",
+        "summary": "Retrieve the data exported for mobile phone-number of a user",
+        "operationId": "retrievePhoneNumberDataInfoSet",
+        "x-fp-pi-scopes": [
+          "user-data-export-phone-number-read"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/parameters/UserId"
+          },
+          {
+            "$ref": "#/parameters/PhoneNumber"
+          },
+          {
+            "$ref": "https://docs.baikalplatform.com/common/v2.3/common.json#/parameters/x-correlator"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {
+              "x-correlator": {
+                "type": "string",
+                "description": "Correlation id for the different services"
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/PhoneNumberDataset"
+            },
+            "examples": {
+              "application/json": {
+                "mobile_consumption_information": {
+                  "phone_number": "+346667778880",
+                  "voice_consumption": [
+                    {
+                      "start_date": "2019-11-18T00:00:00+0100",
+                      "end_date": "2019-12-17T23:59:59+0100",
+                      "total_calls": 33,
+                      "total_seconds": 2339
+                    },
+                    {
+                      "start_date": "2019-10-18T00:00:00+0100",
+                      "end_date": "2019-11-17T23:59:59+0100",
+                      "total_calls": 76,
+                      "total_seconds": 14310
+                    },
+                    {
+                      "start_date": "2019-09-18T00:00:00+0100",
+                      "end_date": "2019-10-17T23:59:59+0100",
+                      "total_calls": 270,
+                      "total_seconds": 20123
+                    },
+                    {
+                      "start_date": "2019-08-18T00:00:00+0100",
+                      "end_date": "2019-09-17T23:59:59+0100",
+                      "total_calls": 317,
+                      "total_seconds": 19728
+                    },
+                    {
+                      "start_date": "2019-07-18T00:00:00+0100",
+                      "end_date": "2019-08-17T23:59:59+0100",
+                      "total_calls": 313,
+                      "total_seconds": 26586
+                    },
+                    {
+                      "start_date": "2019-06-18T00:00:00+0100",
+                      "end_date": "2019-07-17T23:59:59+0100",
+                      "total_calls": 255,
+                      "total_seconds": 16548
+                    }
+                  ],
+                  "data_consumption": [
+                    {
+                      "start_date": "2019-11-18T00:00:00+0100",
+                      "end_date": "2019-12-17T23:59:59+0100",
+                      "total_megabytes": 402
+                    },
+                    {
+                      "start_date": "2019-10-18T00:00:00+0100",
+                      "end_date": "2019-11-17T23:59:59+0100",
+                      "total_megabytes": 238
+                    },
+                    {
+                      "start_date": "2019-09-18T00:00:00+0100",
+                      "end_date": "2019-10-17T23:59:59+0100",
+                      "total_megabytes": 1764
+                    },
+                    {
+                      "start_date": "2019-08-18T00:00:00+0100",
+                      "end_date": "2019-09-17T23:59:59+0100",
+                      "total_megabytes": 3020
+                    },
+                    {
+                      "start_date": "2019-07-18T00:00:00+0100",
+                      "end_date": "2019-08-17T23:59:59+0100",
+                      "total_megabytes": 3218
+                    },
+                    {
+                      "start_date": "2019-06-18T00:00:00+0100",
+                      "end_date": "2019-07-17T23:59:59+0100",
+                      "total_megabytes": 3121
+                    }
+                  ],
+                  "messages_consumption": [
+                    {
+                      "start_date": "2019-11-18T00:00:00+0100",
+                      "end_date": "2019-12-17T23:59:59+0100",
+                      "total_messages": 33
+                    },
+                    {
+                      "start_date": "2019-10-18T00:00:00+0100",
+                      "end_date": "2019-11-17T23:59:59+0100",
+                      "total_messages": 73
+                    },
+                    {
+                      "start_date": "2019-09-18T00:00:00+0100",
+                      "end_date": "2019-10-17T23:59:59+0100",
+                      "total_messages": 108
+                    },
+                    {
+                      "start_date": "2019-08-18T00:00:00+0100",
+                      "end_date": "2019-09-17T23:59:59+0100",
+                      "total_messages": 116
+                    },
+                    {
+                      "start_date": "2019-07-18T00:00:00+0100",
+                      "end_date": "2019-08-17T23:59:59+0100",
+                      "total_messages": 118
+                    },
+                    {
+                      "start_date": "2019-06-18T00:00:00+0100",
+                      "end_date": "2019-07-17T23:59:59+0100",
+                      "total_messages": 113
+                    }
+                  ]
+                },
+                "location_information": {
+                  "phone_number": "+346667778880",
+                  "location_report": [
+                    {
+                      "start_date": "2018-12-17T23:00:00+0100",
+                      "end_date": "2018-12-17T23:59:59+0100",
+                      "zip_codes": [
+                        "47001",
+                        "47002"
+                      ]
+                    },
+                    {
+                      "start_date": "2018-12-17T22:00:00+0100",
+                      "end_date": "2018-12-17T22:59:59+0100",
+                      "zip_codes": [
+                        "47002"
+                      ]
+                    },
+                    {
+                      "start_date": "2018-12-17T21:00:00+0100",
+                      "end_date": "2018-12-17T21:59:59+0100",
+                      "zip_codes": [
+                        "47002",
+                        "47008"
+                      ]
+                    },
+                    {
+                      "start_date": "2018-12-07T20:00:00+0100",
+                      "end_date": "2018-12-07T20:59:59+0100",
+                      "zip_codes": [
+                        "47008",
+                        "47001",
+                        "47010"
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Problem with the client request",
+            "schema": {
+              "$ref": "https://docs.baikalplatform.com/errors/v2.0/errors.json#/definitions/InvalidArgument"
+            },
+            "examples": {
+              "application/json": {
+                "code": "INVALID_ARGUMENT",
+                "message": "Client specified an invalid argument, request body or query param"
+              }
+            }
+          },
+          "403": {
+            "description": "Client does not have sufficient permission",
+            "schema": {
+              "$ref": "https://docs.baikalplatform.com/errors/v2.0/errors.json#/definitions/PermissionDenied"
+            },
+            "examples": {
+              "application/json": {
+                "code": "PERMISSION_DENIED",
+                "message": "Authenticated user has no permission to access the requested resource"
+              }
+            }
+          },
+          "404": {
+            "description": "Resource Not Found",
+            "schema": {
+              "$ref": "https://docs.baikalplatform.com/errors/v2.0/errors.json#/definitions/NotFound"
+            },
+            "examples": {
+              "application/json": {
+                "code": "NOT_FOUND",
+                "message": "A specified resource is not found"
+              }
+            }
+          },
+          "500": {
+            "description": "Server error",
+            "schema": {
+              "$ref": "https://docs.baikalplatform.com/errors/v2.0/errors.json#/definitions/Internal"
+            },
+            "examples": {
+              "application/json": {
+                "code": "INTERNAL",
+                "message": "Server error"
+              }
+            }
+          },
+          "504": {
+            "description": "Request timeout exceeded. If it happens repeatedly, consider reducing the request complexity",
+            "schema": {
+              "$ref": "https://docs.baikalplatform.com/errors/v2.0/errors.json#/definitions/Timeout"
+            },
+            "examples": {
+              "application/json": {
+                "code": "TIMEOUT",
+                "message": "Request timeout exceeded. Try it later"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api-status": {
+      "get": {
+        "tags": [
+          "status"
+        ],
+        "summary": "Retrieve each API endpoint and method health status",
+        "operationId": "getApiStatus",
+        "description": "Get each API endpoint and method health status",
+        "x-fp-scopes": [
+          "status"
+        ],
+        "x-fp-private": true,
+        "parameters": [
+          {
+            "$ref": "https://docs.baikalplatform.com/common/v2.3/common.json#/parameters/x-correlator"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {
+              "x-correlator": {
+                "type": "string",
+                "description": "Correlation id for the different services"
+              }
+            },
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "https://docs.baikalplatform.com/common/v2.3/common.json#/definitions/ApiStatusCheck"
+              }
+            },
+            "examples": {
+              "application/json": [
+                {
+                  "endpoint": "/users/{user_id}/data",
+                  "method": "GET",
+                  "status": "OK"
+                },
+                {
+                  "endpoint": "/users/{user_id}/phone-numbers/{phone_number}/data",
+                  "method": "GET",
+                  "status": "OK"
+                }
+              ]
+            }
+          },
+          "400": {
+            "description": "Problem with the client request",
+            "headers": {
+              "x-correlator": {
+                "type": "string",
+                "description": "Correlation id for the different services"
+              }
+            },
+            "schema": {
+              "$ref": "https://docs.baikalplatform.com/errors/v2.0/errors.json#/definitions/InvalidArgument"
+            },
+            "examples": {
+              "application/json": {
+                "code": "INVALID_ARGUMENT",
+                "message": "Client specified an invalid argument, request body or query param"
+              }
+            }
+          },
+          "403": {
+            "description": "Client does not have sufficient permission",
+            "headers": {
+              "x-correlator": {
+                "type": "string",
+                "description": "Correlation id for the different services"
+              }
+            },
+            "schema": {
+              "$ref": "https://docs.baikalplatform.com/errors/v2.0/errors.json#/definitions/PermissionDenied"
+            },
+            "examples": {
+              "application/json": {
+                "code": "PERMISSION_DENIED",
+                "message": "Authenticated user has no permission to access the requested resource"
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "headers": {
+              "x-correlator": {
+                "type": "string",
+                "description": "Correlation id for the different services"
+              }
+            },
+            "schema": {
+              "$ref": "https://docs.baikalplatform.com/errors/v2.0/errors.json#/definitions/NotFound"
+            },
+            "examples": {
+              "application/json": {
+                "code": "NOT_FOUND",
+                "message": "A specified resource is not found"
+              }
+            }
+          },
+          "500": {
+            "description": "Server error",
+            "headers": {
+              "x-correlator": {
+                "type": "string",
+                "description": "Correlation id for the different services"
+              }
+            },
+            "schema": {
+              "$ref": "https://docs.baikalplatform.com/errors/v2.0/errors.json#/definitions/Internal"
+            },
+            "examples": {
+              "application/json": {
+                "code": "INTERNAL",
+                "message": "Server error"
+              }
+            }
+          },
+          "504": {
+            "description": "Request timeout exceeded. If it happens repeatedly, consider reducing the request complexity",
+            "headers": {
+              "x-correlator": {
+                "type": "string",
+                "description": "Correlation id for the different services"
+              }
+            },
+            "schema": {
+              "$ref": "https://docs.baikalplatform.com/errors/v2.0/errors.json#/definitions/Timeout"
+            },
+            "examples": {
+              "application/json": {
+                "code": "TIMEOUT",
+                "message": "Request timeout exceeded. Try it later"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "x-fp-health": "http://user-data-export:8080/healthz",
+  "definitions": {
+    "UserDataset": {
+      "type": "object",
+      "required": [
+        "identity",
+        "addresses",
+        "bank_accounts",
+        "subscribed_products"
+      ],
+      "properties": {
+        "identity": {
+          "$ref": "#/definitions/Identity"
+        },
+        "contact_info": {
+          "type": "array",
+          "description": "List of ways to contact the user.",
+          "items": {
+            "$ref": "#/definitions/ContactInfo"
+          }
+        },
+        "id_document": {
+          "$ref": "#/definitions/IdDocument"
+        },
+        "additional_id_documents": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/IdDocument"
+          }
+        },
+        "addresses": {
+          "type": "array",
+          "description": "Addresses of the user",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/definitions/Address"
+          }
+        },
+        "bank_accounts": {
+          "type": "array",
+          "description": "Bank accounts of the user",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/definitions/BankAccount"
+          }
+        },
+        "subscribed_products": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SubscribedProduct"
+          }
+        },
+        "fixed_consumption_information": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/FixedConsumptionInformation"
+          }
+        },
+        "mobile_consumption_information": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/MobileConsumptionInformation"
+          }
+        },
+        "video_consumption_information": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/VideoConsumptionInformation"
+          }
+        },
+        "additional_information": {
+          "$ref": "#/definitions/AdditionalInformation"
+        }
+      }
+    },
+    "PhoneNumberDataset": {
+      "type": "object",
+      "required": [
+        "mobile_consumption_information",
+        "location_information"
+      ],
+      "properties": {
+        "mobile_consumption_information": {
+          "$ref": "#/definitions/MobileConsumptionInformation"
+        },
+        "location_information": {
+          "$ref": "#/definitions/LocationInformation"
+        }
+      }
+    },
+    "Identity": {
+      "description": "Identity of the user.",
+      "type": "object",
+      "required": [
+        "first_name",
+        "last_name"
+      ],
+      "properties": {
+        "salutation": {
+          "type": "string",
+          "description": "salutation (Mr, Mrs.) the user wants to be addressed"
+        },
+        "title": {
+          "type": "string",
+          "description": "title (Dr) of the user"
+        },
+        "first_name": {
+          "type": "string",
+          "description": "first name/given name of the user."
+        },
+        "middle_name": {
+          "type": "string",
+          "description": "middle name of the user."
+        },
+        "last_name": {
+          "type": "string",
+          "description": "surname/family name of the user."
+        },
+        "civility": {
+          "type": "string",
+          "description": "civility status (married, single, ...) of the user"
+        },
+        "nickname": {
+          "type": "string",
+          "description": "nickname of the user"
+        },
+        "gender": {
+          "type": "string",
+          "description": "user gender (male, female, ...)"
+        },
+        "birth_date": {
+          "type": "string",
+          "format": "date",
+          "description": "birth date of the user, in ISO-8601 extended date format."
+        },
+        "birth_place": {
+          "type": "string",
+          "description": "birth place of the user"
+        },
+        "birth_country": {
+          "type": "string",
+          "description": "birth country of the user (using country codes as defined by ISO3166-1 alpha2)"
+        },
+        "nationality": {
+          "type": "string",
+          "description": "nationality of the user (using country codes as defined by ISO3166-1 alpha2)"
+        }
+      }
+    },
+    "ContactInfo": {
+      "type": "object",
+      "description": "Contact information",
+      "required": [
+        "type",
+        "value"
+      ],
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "Type of contact.",
+          "enum": [
+            "phone_number",
+            "email"
+          ]
+        },
+        "phone_contact_mean": {
+          "type": "string",
+          "description": "When the type of contact is 'phone_number', this may indicate if customer wants to be called or texted (SMS).",
+          "enum": [
+            "call",
+            "text"
+          ]
+        },
+        "value": {
+          "type": "string",
+          "description": "Value for this contact, i.e.: the email address or phone-number. For phone-number, E164 with + must be used."
+        },
+        "favourite": {
+          "type": "boolean",
+          "description": "Flag used to indicate customer favourite contact media"
+        }
+      }
+    },
+    "AdditionalContactInfo": {
+      "type": "object",
+      "required": [
+        "contact_description",
+        "contact_type",
+        "contact_value"
+      ],
+      "properties": {
+        "contact_description": {
+          "type": "string",
+          "description": "Description of the additional contact info (secondary_email, secondary_mobile)"
+        },
+        "contact_type": {
+          "type": "string",
+          "description": "Type of contact: phone_number, email",
+          "enum": [
+            "phone_number",
+            "email"
+          ]
+        },
+        "contact_value": {
+          "type": "string",
+          "description": "Value of the contact information (email, phone number, etc.)"
+        }
+      }
+    },
+    "IdDocument": {
+      "description": "National ID document.",
+      "type": "object",
+      "required": [
+        "country",
+        "type",
+        "value"
+      ],
+      "properties": {
+        "country": {
+          "type": "string",
+          "description": "Country of issuance of the id_document. Format iso3166-1 alpha-2"
+        },
+        "type": {
+          "type": "string",
+          "description": "Type of document (e.g. passport)"
+        },
+        "value": {
+          "type": "string",
+          "description": "Id number associated to the id_document"
+        },
+        "issue_authority_document": {
+          "type": "string",
+          "description": "Authority that issued the document"
+        },
+        "issue_date_document": {
+          "type": "string",
+          "format": "date",
+          "description": "Date when the document was issued, in ISO-8601 extended date format."
+        },
+        "issue_place_document": {
+          "type": "string",
+          "description": "Place where the document was issued."
+        },
+        "validation_date_document": {
+          "type": "string",
+          "format": "date",
+          "description": "Last date the document was validated, in ISO-8601 extended date format."
+        }
+      }
+    },
+    "Address": {
+      "type": "object",
+      "description": "Postal address of the customer.",
+      "required": [
+        "formatted",
+        "street_address",
+        "locality",
+        "region",
+        "postal_code",
+        "country"
+      ],
+      "properties": {
+        "formatted": {
+          "type": "string",
+          "description": "Full mailing address, formatted for display or use on a mailing label. This field MAY contain multiple lines, separated by newlines. Newlines can be represented either as a carriage return/line feed pair (\"\\r\\n\") or as a single line feed character (\"\\n\")."
+        },
+        "street_address": {
+          "type": "string",
+          "description": "Full street address, which MAY include house number, street name, Post Office Box, and multi-line extended street address information. This field MAY contain multiple lines, separated by newlines. Newlines can be represented either as a carriage return/line feed pair (\"\\r\\n\") or as a single line feed character (\"\\n\")."
+        },
+        "locality": {
+          "type": "string",
+          "description": "City or locality"
+        },
+        "region": {
+          "type": "string",
+          "description": "State, province, prefecture, or region."
+        },
+        "postal_code": {
+          "type": "string",
+          "description": "Zip code or postal code."
+        },
+        "country": {
+          "type": "string",
+          "description": "Country name. Format iso3166-1."
+        },
+        "is_usual_address": {
+          "type": "boolean",
+          "description": "Flag to signal which address is the user usual address; returned if that information is known by the OB."
+        }
+      }
+    },
+    "BankAccount": {
+      "type": "object",
+      "description": "Information about a bank account.",
+      "required": [
+        "account_number",
+        "account_number_type"
+      ],
+      "properties": {
+        "account_number": {
+          "type": "string",
+          "description": "Bank Account Number (e.g.: IBAN)"
+        },
+        "account_number_type": {
+          "type": "string",
+          "description": "Type of account number (usually IBAN, but coud be different if country does not use this standard …)"
+        },
+        "billing_account_name": {
+          "type": "string",
+          "description": "Name given to the billing account to which this bank account is related, if any. User Friendly Field."
+        },
+        "bic": {
+          "type": "string",
+          "description": "Business Identifier Code/Swift code of the financial institution where the account is located"
+        },
+        "national_bank_code": {
+          "type": "string",
+          "description": "National Bank Code."
+        },
+        "national_branch_code": {
+          "type": "string",
+          "description": "Bank Branch Code."
+        },
+        "national_account_number": {
+          "type": "string",
+          "description": "Bank Account Number."
+        },
+        "national_account_type": {
+          "type": "string",
+          "description": "Bank Account Type."
+        },
+        "owner": {
+          "type": "string",
+          "description": "Owner of the bank account, if known"
+        },
+        "bank_name": {
+          "type": "string",
+          "description": "Screen name of the bank. User Friendly Field"
+        }
+      }
+    },
+    "SubscribedProduct": {
+      "type": "object",
+      "required": [
+        "product_name",
+        "product_description",
+        "product_type",
+        "subscription_type"
+      ],
+      "properties": {
+        "product_name": {
+          "type": "string",
+          "description": "Product commercial name. User Friendly Field."
+        },
+        "product_description": {
+          "type": "string",
+          "description": "A human readable description of the product. User Friendly Field."
+        },
+        "product_type": {
+          "type": "string",
+          "description": "The type of the product. \nRegarding 'bolt-on' type, notice it could be used for 'mobile' extras (e.g.: product that gives some extra data quota to mobile service), for 'landline' extras (e.g.: product that gives some minutes quota to call to other national phone-numbers), and for iptv/dth/streaming_tv extras (e.g.: a TV package subscribed to complement an iptv/dth/streaming_tv product). Same may apply to 'device' (could be mobile, a fixed phone or a desco), to 'value_added_service' or to a 'voucher'.\n Notice also that the 'identifiers' field is used to bound a 'bolt-on', a 'device', a 'voucher' or a 'value_added_service' to its related mobile/landline/internet/iptv/dth/streaming_tv product.\nThe 'internet' product_type is intended for internet at home, i.e.: products like Mobile BroadBand shall have be of mobile product_type",
+          "enum": [
+            "mobile",
+            "landline",
+            "internet",
+            "iptv",
+            "bundle",
+            "device",
+            "voucher",
+            "value_added_service",
+            "bolt-on",
+            "dth",
+            "streaming_tv"
+          ]
+        },
+        "subscription_type": {
+          "type": "string",
+          "description": "Specifies how the product is paid (prepaid, postpaid, control)",
+          "enum": [
+            "prepaid",
+            "postpaid",
+            "control"
+          ]
+        },
+        "phone_number": {
+          "type": "string",
+          "description": "Phone number related to the product, when applicable. Format UIT E.164 with +. Example: +34666000000."
+        },
+        "sub_products": {
+          "type": "array",
+          "description": "List of products objects. **Only applies for product_type bundle**",
+          "items": {
+            "$ref": "#/definitions/SubscribedProduct"
+          }
+        }
+      }
+    },
+    "FixedConsumptionInformation": {
+      "type": "object",
+      "required": [
+        "phone_number",
+        "voice_consumption"
+      ],
+      "properties": {
+        "phone_number": {
+          "type": "string",
+          "description": "Landline Phone number for which the report refers to. Format E164 with +"
+        },
+        "voice_consumption": {
+          "$ref": "#/definitions/VoiceConsumption6Months"
+        }
+      }
+    },
+    "MobileConsumptionInformation": {
+      "type": "object",
+      "required": [
+        "phone_number",
+        "voice_consumption",
+        "data_consumption",
+        "messages_consumption"
+      ],
+      "properties": {
+        "phone_number": {
+          "type": "string",
+          "description": "Phone number for which the report refers to. Format E164 with +"
+        },
+        "voice_consumption": {
+          "$ref": "#/definitions/VoiceConsumption6Months"
+        },
+        "data_consumption": {
+          "$ref": "#/definitions/DataConsumption6Months"
+        },
+        "messages_consumption": {
+          "$ref": "#/definitions/MessageConsumption6Months"
+        }
+      }
+    },
+    "VideoConsumptionInformation": {
+      "type": "object",
+      "required": [
+        "phone_number",
+        "video_consumption"
+      ],
+      "properties": {
+        "phone_number": {
+          "type": "string",
+          "description": "Landline Phone number for which the report refers to. Format E164 with +. The phone_number refers to the landline in the home where the video provided is being provided"
+        },
+        "video_consumption": {
+          "$ref": "#/definitions/VideoConsumption6Months"
+        }
+      }
+    },
+    "VoiceConsumption6Months": {
+      "type": "array",
+      "description": "Voice Call consumption (tarified outgoing calls) in last 6 months, aggregated by month. Months are counted in billing cycles. Report includes last 6 already completed billing cycles / months.\n Report may include less than 6 items when information do not exist, for example if customer joined the OB recently or customer didn't subscribe a product with voice service for the identifier. Notice that if product was subscribed but there was no consumption at all, item will be included indicating 0 in total_calls and total_seconds.",
+      "maxItems": 6,
+      "items": {
+        "$ref": "#/definitions/VoiceConsumptionMonth"
+      }
+    },
+    "VoiceConsumptionMonth": {
+      "type": "object",
+      "description": "Voice calls usage aggregated by month",
+      "required": [
+        "start_date",
+        "end_date",
+        "total_calls",
+        "total_seconds"
+      ],
+      "properties": {
+        "start_date": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Start date of the monthly voice consumption aggregated data, in ISO-8601 extended local date format."
+        },
+        "end_date": {
+          "type": "string",
+          "format": "date-time",
+          "description": "End date of the monthly voice consumption aggregated data, in ISO-8601 extended local date format."
+        },
+        "total_calls": {
+          "type": "integer",
+          "format": "int64",
+          "description": "Number of calls"
+        },
+        "total_seconds": {
+          "type": "integer",
+          "format": "int64",
+          "description": "Amount of seconds consumed"
+        }
+      }
+    },
+    "DataConsumption6Months": {
+      "type": "array",
+      "description": "Data consumption (uplink + downlink) in last 6 months, aggregated by month. Months are counted in billing cycles. Report includes last 6 already completed billing cycles / months.\n Report may include less than 6 items when information do not exist, for example if customer joined the OB recently or customer didn't subscribe a product with data service for the identifier. Notice that if product was subscribed but there was no consumption at all, item will be included indicating 0 in total_megabytes.",
+      "maxItems": 6,
+      "items": {
+        "$ref": "#/definitions/DataConsumptionMonth"
+      }
+    },
+    "DataConsumptionMonth": {
+      "type": "object",
+      "description": "Data usage aggregated by month",
+      "required": [
+        "start_date",
+        "end_date",
+        "total_megabytes"
+      ],
+      "properties": {
+        "start_date": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Start date of the monthly data consumption aggregated data, in ISO-8601 extended local date format."
+        },
+        "end_date": {
+          "type": "string",
+          "format": "date-time",
+          "description": "End date of the monthly data consumption aggregated data, in ISO-8601 extended local date format."
+        },
+        "total_megabytes": {
+          "type": "integer",
+          "format": "int64",
+          "description": "Amount of Mb consumed"
+        }
+      }
+    },
+    "MessageConsumption6Months": {
+      "type": "array",
+      "description": "Message (Sent SMS and MMS) consumption in last 6 months, aggregated by month. Months are counted in billing cycles. Report includes last 6 already completed billing cycles / months.\n Report may include less than 6 items when information do not exist, for example if customer joined the OB recently or customer didn't subscribe a product with messaging service for the identifier. Notice that if product was subscribed but there was no consumption at all, item will be included indicating 0 in total_mesages.",
+      "maxItems": 6,
+      "items": {
+        "$ref": "#/definitions/MessageConsumptionMonth"
+      }
+    },
+    "MessageConsumptionMonth": {
+      "type": "object",
+      "description": "Message usage aggregated by month",
+      "required": [
+        "start_date",
+        "end_date",
+        "total_messages"
+      ],
+      "properties": {
+        "start_date": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Start date of the monthly message consumption aggregated data, in ISO-8601 extended local date format."
+        },
+        "end_date": {
+          "type": "string",
+          "format": "date-time",
+          "description": "End date of the monthly message consumption aggregated data, in ISO-8601 extended local date format."
+        },
+        "total_messages": {
+          "type": "integer",
+          "format": "int64",
+          "description": "Number of messages sent"
+        }
+      }
+    },
+    "VideoConsumption6Months": {
+      "type": "array",
+      "description": "Number of Video consumption contents (VoD excluding recordings, live control and last7days) in last 6 months, aggregated by month. Months are counted in billing cycles.\n Report includes last 6 completed billing cycles, when available. Report may include less than 6 items when information do not exist, for example if customer joined the OB recently or customer didn't subscribe a video product. Notice that if product was subscribed but there was no consumption at all in a cycle, corresponding item will be included indicating 0 in total_contents.",
+      "maxItems": 6,
+      "items": {
+        "$ref": "#/definitions/VideoConsumptionMonth"
+      }
+    },
+    "VideoConsumptionMonth": {
+      "type": "object",
+      "description": "Video consumption minutes aggregated by month",
+      "required": [
+        "start_date",
+        "end_date",
+        "total_contents"
+      ],
+      "properties": {
+        "start_date": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Start date of the monthly video consumption aggregated data, in ISO-8601 extended local date format."
+        },
+        "end_date": {
+          "type": "string",
+          "format": "date-time",
+          "description": "End date of the monthly video consumption aggregated data, in ISO-8601 extended local date format."
+        },
+        "total_contents": {
+          "type": "integer",
+          "format": "int64",
+          "description": "Number of video contents viewed"
+        },
+        "contents": {
+          "type": "array",
+          "description": "List of the contents viewed in the month. If a content is viewed several times, it will appear once per each time has been viewed. If 'total_contents' is 0, this object won't be included",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/definitions/VideoContent"
+          }
+        }
+      }
+    },
+    "VideoContent": {
+      "type": "object",
+      "description": "A content viewed by the user",
+      "properties": {
+        "title": {
+          "type": "string",
+          "description": "Title of the content"
+        },
+        "view_date": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Date when the content was viewed, in ISO-8601 extended local date format. Time-offset from UTC may be used to match local OB time."
+        }
+      }
+    },
+    "LocationInformation": {
+      "type": "object",
+      "description": "Report of location for a phone_number. Report provides list of zip_codes where the phone_number was in each hour of last closed billing cycle",
+      "required": [
+        "phone_number"
+      ],
+      "properties": {
+        "phone_number": {
+          "type": "string",
+          "description": "Phone number for which the report refers to. Format E164 with +"
+        },
+        "location_report": {
+          "type": "array",
+          "description": "Location report. Provides location information for each hour of the day. If there is no information available for any hour, this object won't be included",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/definitions/LocationReportEntry"
+          }
+        }
+      }
+    },
+    "LocationReportEntry": {
+      "type": "object",
+      "description": "Location report entry, one entry provided for each hour",
+      "required": [
+        "start_date",
+        "end_date",
+        "zip_codes"
+      ],
+      "properties": {
+        "start_date": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Start date of the location report entry, in ISO-8601 extended local date format. Time-offset from UTC may be used to match local OB time"
+        },
+        "end_date": {
+          "type": "string",
+          "format": "date-time",
+          "description": "End date of the location report entry, in ISO-8601 extended extended local date format. Time-offset from UTC may be used to match local OB time"
+        },
+        "zip_codes": {
+          "type": "array",
+          "description": "List of zip codes the phone_number has been in reported time frame. If empty, there is no information for such time frame",
+          "items": {
+            "type": "string",
+            "description": "A zip code"
+          }
+        }
+      }
+    },
+    "AdditionalInformation": {
+      "type": "object",
+      "description": "Additional user information",
+      "properties": {
+        "number_of_phones": {
+          "type": "integer",
+          "description": "Number of phones in the household."
+        },
+        "broadband_operator": {
+          "type": "string",
+          "description": "Broadband operator name."
+        }
+      }
+    }
+  },
+  "parameters": {
+    "UserId": {
+      "name": "user_id",
+      "in": "path",
+      "description": "Id of the user for which the methods apply.\nThis value should be changed to the special keyword 'me' to simplify calls when access using OAuth2 with three-legged authentication",
+      "required": true,
+      "type": "string",
+      "x-fp-identifier": "user_id"
+    },
+    "PhoneNumber": {
+      "name": "phone_number",
+      "in": "path",
+      "required": true,
+      "type": "string",
+      "description": "Phone number for which the invoices apply. 'E164 with +'' format.",
+      "x-fp-identifier": "phone_number"
+    }
+  },
+  "x-fp-scopesDefinition": {
+    "status": "Permission to read API endpoints health status"
+  }
+}
