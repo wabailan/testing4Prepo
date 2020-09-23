@@ -11,7 +11,7 @@
     }
   },
   "x-fp-apiPrefix": "/user-data-export",
-  "basePath": "/t3/cus/u360/userdataexport/v1",
+  "basePath": "/t3/cus/u360/v1/userdataexport/v1",
   "tags": [
     {
       "name": "data-export",
