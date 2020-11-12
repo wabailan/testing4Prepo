@@ -11,7 +11,7 @@
         }
     },
     "x-fp-apiPrefix": "/checkout",
-    "host": "//checkout-service-cert1-es.mytelco.io",
+    "host": "checkout-service-cert1-es.mytelco.io",
     "basePath": "/checkout",
     "tags": [
         {
