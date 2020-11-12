@@ -11,7 +11,7 @@
         }
     },
     "x-fp-apiPrefix": "/checkout",
-    "host": "https://checkout-service-cert1-es.mytelco.io",
+    "host": "//checkout-service-cert1-es.mytelco.io",
     "basePath": "/checkout",
     "tags": [
         {
@@ -27,7 +27,7 @@
             "description": "Operations available with regards to configuration"
         }
     ],
-    "schemes": ["http"],
+    "schemes": ["https"],
     "consumes": ["application/json"],
     "produces": ["application/json"],
     "paths": {
